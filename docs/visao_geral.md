@@ -43,23 +43,23 @@ A API de Gestão de Pedidos tem como objetivo centralizar e digitalizar o fluxo 
 
 ### 2.1. Arquitetura
 
-O sistema seguirá um padrão de arquitetura de **Microserviço** em camadas (Controller $\to$ Service $\to$ Repository), utilizando o Spring Boot.
+O sistema seguirá um padrão de arquitetura em camadas, utilizando o Spring Boot.
 
 * **Linguagem de Programação:** Java (versão 17+).
 * **Framework:** Spring Boot.
-* **Banco de Dados:** PostgreSQL (Recomendado para produção).
+* **Banco de Dados:** PostgreSQL.
 * **Documentação da API:** OpenAPI / Swagger.
 
 ### 2.2. Modelo de Dados (Entidades Chave)
 
 A seguir, a estrutura básica das entidades do sistema:
 
-#### **Entidade: `Produto` (Cardápio)**
-| Campo | Tipo | Descrição |
-| :--- | :--- | :--- |
-| `id` | UUID/Long | **PK**. Identificador do produto. |
-| `nome` | String | Nome do item (ex: "Água sem gás"). |
-| `preco` | BigDecimal | Preço unitário. |
+#### **Entidade: `Product` (Cardápio)**
+| Campo   | Tipo | Descrição |
+|:--------| :--- | :--- |
+| `id`    | UUID/Long | **PK**. Identificador do produto. |
+| `name`  | String | Nome do item (ex: "Água sem gás"). |
+| `price` | BigDecimal | Preço unitário. |
 
 #### **Entidade: `Mesa`**
 | Campo | Tipo | Descrição |
@@ -77,15 +77,15 @@ A seguir, a estrutura básica das entidades do sistema:
 | `valorTotal` | BigDecimal | Total acumulado da Comanda. **Atualizado a cada novo Pedido.** |
 | `status` | Enum | `ABERTA`, `FECHADA`. |
 
-#### **Entidade: `ItemPedido` (Registro de um Produto em uma Comanda)**
-| Campo | Tipo | Descrição |
-| :--- | :--- | :--- |
-| `id` | UUID/Long | **PK**. |
-| `comandaId` | UUID/Long | **FK** para `Comanda`. |
-| `produtoId` | UUID/Long | **FK** para `Produto`. |
-| `quantidade` | Integer | Quantidade pedida. |
+#### **Entidade: `OrderItem` (Registro de um Produto em uma Comanda)**
+| Campo           | Tipo | Descrição                                                              |
+|:----------------| :--- |:-----------------------------------------------------------------------|
+| `id`            | UUID/Long | **PK**.                                                                |
+| `comandaId`     | UUID/Long | **FK** para `Comanda`.                                                 |
+| `productId`     | UUID/Long | **FK** para `Product`.                                                 |
+| `quantidade`    | Integer | Quantidade pedida.                                                     |
 | `precoUnitario` | BigDecimal | Preço do produto no momento do pedido (para evitar variação de preço). |
-| `subtotal` | BigDecimal | Quantidade * PreçoUnitario. |
+| `subtotal`      | BigDecimal | Quantidade * PreçoUnitario.                                            |
 
 ---
 
@@ -99,11 +99,11 @@ Todos os endpoints, exceto o de Extrato (`/extrato`), requerem autenticação (e
 
 ### 3.2. Gerenciamento de Mesas e Comandas
 
-| Método | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| `POST` | `/mesas/{mesaId}/abrir` | Abre uma nova Comanda para a Mesa. Requer autenticação do Garçom. |
+| Método | Endpoint | Descrição                                   |
+| :--- | :--- |:--------------------------------------------|
+| `POST` | `/mesas/{mesaId}/abrir` | Abre uma nova Comanda para a Mesa.|
 | `GET` | `/mesas/{mesaId}` | Retorna o status e a Comanda Ativa da Mesa. |
-| `POST` | `/mesas/{mesaId}/fechar` | Fecha a Comanda, finalizando a conta. |
+| `POST` | `/mesas/{mesaId}/fechar` | Fecha a Comanda, finalizando a conta.       |
 
 ### 3.3. Gerenciamento de Pedidos (Garçom)
 
