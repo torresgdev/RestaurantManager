@@ -28,5 +28,7 @@ public class Product {
     private BigDecimal price;
 
     public Product(@NotBlank(message = "Nome do produto é obrigatório") @Size(min = 3, max = 100, message = "O nome deve ter entre {min} e {max} caracteres") String name, @NotNull(message = "Preço do produto é obrigatório.") @DecimalMin(value = "0.01", inclusive = true, message = "Preço do produto deve ser positivo e maior que zero ") BigDecimal price) {
+        this.name = name;
+        this.price = price;
     }
 }
