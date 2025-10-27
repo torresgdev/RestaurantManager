@@ -8,7 +8,7 @@ import com.restaurant.ez_rest.model.Table;
 import com.restaurant.ez_rest.model.TableStatus;
 import com.restaurant.ez_rest.repository.TableRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class TableService {
 
     private final TableRepository tableRepository;
 
-    @Value("${api.base.url:http://localhost:8080/api/v1}")
+    @Value( "${api.base.url:http://localhost:8080/api/v1}")
     private String apiBaseUrl;
 
 
