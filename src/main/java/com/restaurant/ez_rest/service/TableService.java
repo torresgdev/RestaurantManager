@@ -4,7 +4,7 @@ package com.restaurant.ez_rest.service;
 import com.restaurant.ez_rest.dto.tableDTOs.TableRequestDTO;
 import com.restaurant.ez_rest.dto.tableDTOs.TableResponseDTO;
 import com.restaurant.ez_rest.exception.TableNotFoundException;
-import com.restaurant.ez_rest.model.Table;
+import com.restaurant.ez_rest.model.RestaurantTable;
 import com.restaurant.ez_rest.model.TableStatus;
 import com.restaurant.ez_rest.repository.TableRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +25,17 @@ public class TableService {
 
     public TableResponseDTO createTable(TableRequestDTO requestDTO) {
 
-        Table nTable = new Table();
-        nTable.setTableStatus(TableStatus.FREE);
+        RestaurantTable nRestaurantTable = new RestaurantTable();
+        nRestaurantTable.setTableStatus(TableStatus.FREE);
 
-        Table savedTable = tableRepository.save(nTable);
+        RestaurantTable savedRestaurantTable = tableRepository.save(nRestaurantTable);
 
-        String qrCodeUrl = generateQRCodeUrl(savedTable.getId());
-        savedTable.setQrCodeUrl(qrCodeUrl);
+        String qrCodeUrl = generateQRCodeUrl(savedRestaurantTable.getId());
+        savedRestaurantTable.setQrCodeUrl(qrCodeUrl);
 
-        Table finalTable = tableRepository.save(savedTable);
+        RestaurantTable finalRestaurantTable = tableRepository.save(savedRestaurantTable);
 
-        return TableResponseDTO.fromModel(finalTable);
+        return TableResponseDTO.fromModel(finalRestaurantTable);
     }
 
     private String generateQRCodeUrl(long tableId) {
@@ -47,9 +47,9 @@ public class TableService {
     }
 
     public TableResponseDTO listById(Long id) {
-        Table table = tableRepository.findById(id).orElseThrow(() -> new TableNotFoundException("Mesa com ID: "+id+", não encontrada"));
+        RestaurantTable restaurantTable = tableRepository.findById(id).orElseThrow(() -> new TableNotFoundException("Mesa com ID: "+id+", não encontrada"));
 
-        return TableResponseDTO.fromModel(table);
+        return TableResponseDTO.fromModel(restaurantTable);
     }
 
     public void deleteTable(Long id) {

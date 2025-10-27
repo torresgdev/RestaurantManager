@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@jakarta.persistence.Table(name = "restaurant_order")
 public class Order {
 
     @Id
@@ -24,7 +23,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "table_id", nullable = false)
-    private Table table;
+    private RestaurantTable table;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
@@ -44,7 +43,7 @@ public class Order {
 
 
 
-    public Order(Table table) {
+    public Order(RestaurantTable table) {
         this.table = table;
         this.orderStatus = OrderStatus.OPEN;
         this.openedAt = LocalDateTime.now();

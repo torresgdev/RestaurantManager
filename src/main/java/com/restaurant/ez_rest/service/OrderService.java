@@ -37,7 +37,7 @@ public class OrderService {
     public void openOrder(long tableId) {
 
         // REGRA 1: Verifica se a Mesa existe
-        Table table = tableRepository.findById(tableId).orElseThrow(() ->  new TableNotFoundException("Mesa com ID: "+tableId
+        RestaurantTable restaurantTable = tableRepository.findById(tableId).orElseThrow(() ->  new TableNotFoundException("Mesa com ID: "+tableId
         +", não existe."));
 
         // REGRA 2: Verifica se já existe uma Comanda ABERTA para essa Mesa
@@ -47,14 +47,14 @@ public class OrderService {
 
         // REGRA 3: Cria a nova Comanda (Order)
 
-        Order nOrder = new Order((jakarta.persistence.Table) table);
+        Order nOrder = new Order(restaurantTable);
 
         // REGRA 4: Persiste a Comanda
         orderRepository.save(nOrder);
 
         // REGRA 5: Atualiza o Status da Mesa para OCUPADA
-        table.setTableStatus(TableStatus.OCCUPIED);
-        tableRepository.save(table);
+        restaurantTable.setTableStatus(TableStatus.OCCUPIED);
+        tableRepository.save(restaurantTable);
     }
 
     // 2. Adicionar Itens à Comanda (Próximo Passo)

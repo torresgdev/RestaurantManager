@@ -1,6 +1,6 @@
 package com.restaurant.ez_rest.dto.tableDTOs;
 
-import com.restaurant.ez_rest.model.Table;
+import com.restaurant.ez_rest.model.RestaurantTable;
 import com.restaurant.ez_rest.model.TableStatus;
 
 public record TableResponseDTO(
@@ -8,11 +8,11 @@ public record TableResponseDTO(
         TableStatus tableStatus,
         String qrCodeUrl
 ) {
-    public static TableResponseDTO fromModel(Table table) {
+    public static TableResponseDTO fromModel(RestaurantTable restaurantTable) {
         return new TableResponseDTO(
-                table.getId(),
-                table.getTableStatus(),
-                table.getQrCodeUrl()
+                restaurantTable.getId(),
+                restaurantTable.getTableStatus(),
+                restaurantTable.getQrCodeUrl()
         );
 
     }
