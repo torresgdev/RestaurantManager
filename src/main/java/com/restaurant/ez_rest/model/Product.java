@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@RestaurantTable(name = "product_item")
+@Table(name = "product_item")
 public class Product {
 
     @Id
