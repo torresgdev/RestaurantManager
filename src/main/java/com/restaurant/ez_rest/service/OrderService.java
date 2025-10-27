@@ -3,6 +3,7 @@ package com.restaurant.ez_rest.service;
 
 import com.restaurant.ez_rest.dto.orderDTOs.OrderItemRequestDTO;
 import com.restaurant.ez_rest.dto.orderDTOs.OrderRequestDTO;
+import com.restaurant.ez_rest.dto.orderDTOs.StatementeResponseDTO;
 import com.restaurant.ez_rest.exception.BusinessLogicException;
 import com.restaurant.ez_rest.exception.ConflictNameException;
 import com.restaurant.ez_rest.exception.ProductNotFoundException;
@@ -115,5 +116,14 @@ public class OrderService {
 
         //Salva a Comanda ATUALIZADA
         orderRepository.save(activeOrder);
+    }
+
+    public StatementeResponseDTO getOrderStatment(Long tableId) {
+        // 1. Busca a Comanda ABERTA para a Mesa (Se for Extrato, só queremos a ativa)
+        Order activeOrder = orderRepository.findByTableIdAndOrderStatus(tableId, OrderStatus.OPEN)
+                .orElseThrow(() -> new BusinessLogicException("Não há Comanda ABERTA para a Mesa "+tableId+"." ));
+
+        // 2. Mapeia a Comanda (Order) e seus Itens (OrderItems) para o DTO de Resposta
+       return StatementeResponseDTO.fromModel(activeOrder);
     }
 }
