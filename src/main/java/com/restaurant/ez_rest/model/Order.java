@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "order_table")
 public class Order {
 
     @Id
@@ -32,15 +33,14 @@ public class Order {
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
 
-    @Column(name = "total_value",nullable = false)
-    private BigDecimal totalValue;
+    @Column(name = "total_value", nullable = false)
+    private BigDecimal totalValue = BigDecimal.ZERO;
 
     @Column(nullable = false)
     private LocalDateTime openedAt;
 
     @Column
     private LocalDateTime closedAt;
-
 
 
     public Order(RestaurantTable table) {
@@ -51,5 +51,12 @@ public class Order {
     }
 
 
+    @PostLoad // Chamado após a entidade ser carregada do banco
+    public void initializeTotalValue() {
+        if (this.totalValue == null) {
+            this.totalValue = BigDecimal.ZERO;
+        }
+
+    }
 
 }

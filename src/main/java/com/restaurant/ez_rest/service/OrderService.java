@@ -92,18 +92,21 @@ public class OrderService {
             BigDecimal unitPrice = product.getPrice();
             Integer quantity = itemDTO.quantity();
 
+            BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
+
             // Cria o OrderItem
             OrderItem nItem = new OrderItem();
             nItem.setOrder(activeOrder);
             nItem.setProduct(product);
             nItem.setQuantity(quantity);
             nItem.setUnitPrice(unitPrice);
+            nItem.setSubtotal(subtotal);
 
             // Adiciona o novo item à lista da Comanda para salvar
             newOrderItems.add(nItem);
 
             // Acumula o valor total dos novos itens
-            totalItemsValue = totalItemsValue.add(nItem.getSubtotal());
+            totalItemsValue = totalItemsValue.add(subtotal);
         }
 
         // 6. Persistir os novos OrderItems
