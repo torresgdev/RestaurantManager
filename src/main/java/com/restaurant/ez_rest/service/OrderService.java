@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -128,5 +129,25 @@ public class OrderService {
 
         // 2. Mapeia a Comanda (Order) e seus Itens (OrderItems) para o DTO de Resposta
        return StatementeResponseDTO.fromModel(activeOrder);
+    }
+
+    @Transactional
+    public StatementeResponseDTO closeOrder(Long tableId) {
+        // 1. Validar e buscar a Comanda ATIVA
+        Order activeOrder =  orderRepository.findByTableIdAndOrderStatus(tableId, OrderStatus.OPEN)
+                .orElseThrow(() -> new BusinessLogicException("Não existe Comanda ABERTA para a Mesa " + tableId + "."));
+
+        RestaurantTable table = activeOrder.getTable();
+
+        // 2. Atualiza o Status da Comanda (ORDER)
+        activeOrder.setOrderStatus(OrderStatus.CLOSED);
+        activeOrder.setClosedAt(LocalDateTime.now());
+
+        orderRepository.save(activeOrder);
+
+        table.setTableStatus(TableStatus.FREE);
+        tableRepository.save(table);
+
+        return StatementeResponseDTO.fromModel(activeOrder);
     }
 }
