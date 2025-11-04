@@ -10,7 +10,6 @@ import com.restaurant.ez_rest.exception.ProductNotFoundException;
 import com.restaurant.ez_rest.model.Product;
 import com.restaurant.ez_rest.repository.ProductRepository;
 import com.restaurant.ez_rest.service.ProductService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
