@@ -1,6 +1,6 @@
 # 🍔 DOCUMENTAÇÃO DA API DE GESTÃO DE PEDIDOS DE RESTAURANTE
 
-## 1. Visão Geral e Conceito de Negócio (Passo 1)
+## 1. Visão Geral e Conceito de Negócio 
 
 ### 1.1. Introdução
 
@@ -39,7 +39,7 @@ A API de Gestão de Pedidos tem como objetivo centralizar e digitalizar o fluxo 
 
 ---
 
-## 2. Arquitetura e Modelagem de Dados (Passo 2)
+## 2. Arquitetura e Modelagem de Dados 
 
 ### 2.1. Arquitetura
 
@@ -61,21 +61,21 @@ A seguir, a estrutura básica das entidades do sistema:
 | `name`  | String | Nome do item (ex: "Água sem gás"). |
 | `price` | BigDecimal | Preço unitário. |
 
-#### **Entidade: `Mesa`**
-| Campo | Tipo | Descrição |
-| :--- | :--- | :--- |
-| `id` | Long | **PK**. Número físico da mesa. |
-| `status` | Enum | `OCUPADA`, `LIVRE`. |
+#### **Entidade: `TableRestaurant`**
+| Campo | Tipo | Descrição                                                 |
+| :--- | :--- |:----------------------------------------------------------|
+| `id` | Long | **PK**. Número físico da mesa.                            |
+| `status` | Enum | `OCCUPIED`, `FREE`.                                       |
 | `qrCodeUrl` | String | URL para o endpoint de Extrato (ex: `/extrato/{mesaId}`). |
 
 #### **Entidade: `Comanda` (Comanda Ativa da Mesa)**
-| Campo | Tipo | Descrição |
-| :--- | :--- | :--- |
-| `id` | UUID/Long | **PK**. Identificador da Comanda. |
-| `mesaId` | Long | **FK** para `Mesa`. |
-| `dataHoraAbertura` | LocalDateTime | Registro de quando a Comanda foi aberta. |
+| Campo        | Tipo | Descrição |
+|:-------------| :--- | :--- |
+| `id`         | UUID/Long | **PK**. Identificador da Comanda. |
+| `mesaId`     | Long | **FK** para `Mesa`. |
+| `openedAt`   | LocalDateTime | Registro de quando a Comanda foi aberta. |
 | `valorTotal` | BigDecimal | Total acumulado da Comanda. **Atualizado a cada novo Pedido.** |
-| `status` | Enum | `ABERTA`, `FECHADA`. |
+| `status`     | Enum | `ABERTA`, `FECHADA`. |
 
 #### **Entidade: `OrderItem` (Registro de um Produto em uma Comanda)**
 | Campo           | Tipo | Descrição                                                              |
@@ -89,29 +89,26 @@ A seguir, a estrutura básica das entidades do sistema:
 
 ---
 
-## 3. Endpoints da API (Passo 3)
+## 3. Endpoints da API 
 
-**Base URL:** `/api/v1`
+**Base URL:** `http://localhost:8080/`
 
-### 3.1. Autenticação
 
-Todos os endpoints, exceto o de Extrato (`/extrato`), requerem autenticação (ex: JWT / Token) para acesso do Garçom/Sistema.
+### 3.1. Gerenciamento de Mesas e Comandas
 
-### 3.2. Gerenciamento de Mesas e Comandas
-
-| Método | Endpoint | Descrição                                   |
-| :--- | :--- |:--------------------------------------------|
-| `POST` | `/mesas/{mesaId}/abrir` | Abre uma nova Comanda para a Mesa.|
-| `GET` | `/mesas/{mesaId}` | Retorna o status e a Comanda Ativa da Mesa. |
-| `POST` | `/mesas/{mesaId}/fechar` | Fecha a Comanda, finalizando a conta.       |
+| Método | Endpoint                  | Descrição                                   |
+| :--- |:--------------------------|:--------------------------------------------|
+| `POST` | `/table/{tableId}/abrir`  | Abre uma nova Comanda para a Mesa.|
+| `GET` | `/table/{tableId}`        | Retorna o status e a Comanda Ativa da Mesa. |
+| `POST` | `/orders/close/{tableId}` | Fecha a Comanda, finalizando a conta.       |
 
 ### 3.3. Gerenciamento de Pedidos (Garçom)
 
-| Método | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| `POST` | `/pedidos` | Adiciona um novo Pedido à Comanda Ativa da Mesa. |
-| `PATCH` | `/pedidos/{itemId}` | Altera a quantidade de um ItemPedido específico. |
-| `DELETE` | `/pedidos/{itemId}` | Remove um ItemPedido da Comanda. |
+| Método | Endpoint             | Descrição |
+| :--- |:---------------------| :--- |
+| `POST` | `/orders/-add-items` | Adiciona um novo Pedido à Comanda Ativa da Mesa. |
+| `PATCH` | `/orders/{itemId}`   | Altera a quantidade de um ItemPedido específico. |
+| `DELETE` | `/orders/{itemId}`   | Remove um ItemPedido da Comanda. |
 
 #### Exemplo de Requisição (POST /pedidos)
 ```json
