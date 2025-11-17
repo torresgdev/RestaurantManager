@@ -1,29 +1,33 @@
-# Estágio 1:
-FROM maven:3.9.6-jdk-17 AS build
+# Estágio 1: Build
+FROM eclipse-temurin:17-jdk-focal AS build
 
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
 
+# Instala o Maven dentro do container Temurin
+# O Render (baseado em Linux) já tem o 'apt' (instalador de pacotes)
+RUN apt-get update && apt-get install -y maven
+
 # Copia o arquivo pom.xml para o container
 COPY pom.xml .
 
-# Baixa as dependências (para agilizar o próximo build)
+# Baixa as dependências
 RUN mvn dependency:go-offline
 
 # Copia todo o código-fonte
 COPY src ./src
 
-# Compila o projeto e cria o arquivo JAR na pasta 'target'
+# Compila o projeto e cria o arquivo JAR
 RUN mvn clean install -DskipTests
 
-# Usamos uma imagem menor, apenas com o ambiente de execução Java (JRE)
+# Estágio 2: Runtime (usando apenas o JRE para ser leve)
+# Manteve-se o eclipse-temurin, que já se provou seguro
 FROM eclipse-temurin:17-jre-focal
 
-# Define a porta de exposição (Spring Boot padrão)
+# Define a porta de exposição
 EXPOSE 8080
 
 # Copia o arquivo JAR do estágio de build para o estágio de runtime
-# O nome do JAR pode variar, o '*' pega o primeiro arquivo .jar que encontrar
 COPY --from=build /app/target/*.jar app.jar
 
 # Comando para iniciar a aplicação Spring Boot
