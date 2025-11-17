@@ -1,5 +1,5 @@
 # Estágio 1:
-FROM maven:3.8.7-openjdk-17 AS build
+FROM maven:3.9.6-jdk-17 AS build
 
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY src ./src
 RUN mvn clean install -DskipTests
 
 # Usamos uma imagem menor, apenas com o ambiente de execução Java (JRE)
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre-focal
 
 # Define a porta de exposição (Spring Boot padrão)
 EXPOSE 8080
