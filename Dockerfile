@@ -1,5 +1,5 @@
 # Estágio 1: Build
-FROM eclipse-temurin:21-jdk-focal AS build
+FROM eclipse-temurin:21-jdk-jammy AS build
 
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
@@ -22,7 +22,7 @@ RUN mvn clean install -DskipTests
 
 # Estágio 2: Runtime (usando apenas o JRE para ser leve)
 # Manteve-se o eclipse-temurin, que já se provou seguro
-FROM eclipse-temurin:21-jre-focal
+FROM eclipse-temurin:21-jre-jammy
 
 # Define a porta de exposição
 EXPOSE 8080
