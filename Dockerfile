@@ -31,4 +31,5 @@ EXPOSE 8080
 COPY --from=build /app/target/*.jar app.jar
 
 # Comando para iniciar a aplicação Spring Boot
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Comando para iniciar a aplicação Spring Boot, garantindo que o Spring leia a variável DATABASE_URL
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-Dspring.datasource.url=${DATABASE_URL}", "-Dspring.datasource.username=${POSTGRES_USER}", "-Dspring.datasource.password=${POSTGRES_PASSWORD}", "-jar", "/app.jar"]
